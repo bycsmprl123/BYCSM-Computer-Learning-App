@@ -1,0 +1,56 @@
+name: BYCSM Android APK Build
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'lib/**'
+      - 'assets/**'
+      - 'pubspec.yaml'
+      - 'android/**'
+      - '.github/workflows/android-apk-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build-debug-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Generate Android scaffold if missing
+        run: |
+          if [ ! -d android ]; then
+            flutter create --platforms=android --org org.bycsmission --project-name bycsml .
+          fi
+      - name: Check Firebase is configured
+        run: |
+          if grep -q 'CONFIGURE_FIREBASE_API_KEY\|bycsm-configure-me' lib/firebase_options.dart; then
+            echo 'Firebase placeholder configuration remains. Configure Firebase before building.'
+            exit 1
+          fi
+          if grep -q 'firebaseConfigured = false' lib/firebase_config.dart; then
+            echo 'firebaseConfigured is false. Enable it after configuring Firebase.'
+            exit 1
+          fi
+      - name: Dependencies
+        run: flutter pub get
+      - name: Static analysis
+        run: flutter analyze
+      - name: Tests
+        run: flutter test
+      - name: Build debug APK
+        run: flutter build apk --debug
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BYCSM-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
