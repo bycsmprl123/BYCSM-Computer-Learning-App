@@ -4,8 +4,9 @@ name: Build BYCSM Android APK
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    paths:
+      - '**.zip'
+      - '.github/workflows/android-apk-build.yml'
 
 jobs:
   build:
@@ -15,27 +16,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract Flutter project
-        run: unzip -o BYCSM_Flutter_Starter_v2_1.zip -d .
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: stable
 
-      - name: Flutter version
-        run: flutter --version
+      - name: Locate Flutter project
+        run: |
+          mkdir -p extracted
+          unzip -oq BYCSM_Flutter_Starter_v2_1.zip -d extracted
+          find extracted -name pubspec.yaml
+
+      - name: Find project folder
+        run: |
+          PROJECT=$(find extracted -name pubspec.yaml -print -quit)
+          echo "PROJECT_DIR=$(dirname "$PROJECT")" >> $GITHUB_ENV
 
       - name: Get dependencies
-        working-directory: BYCSM_Flutter_Starter
         run: flutter pub get
+        working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Build APK
-        working-directory: BYCSM_Flutter_Starter
-        run: flutter build apk --debug
+        run: flutter build apk --release
+        working-directory: ${{ env.PROJECT_DIR }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: BYCSM-Android-APK
-          path: BYCSM_Flutter_Starter/build/app/outputs/flutter-apk/app-debug.apk
+          name: BYCSM-APK
+          path: ${{ env.PROJECT_DIR }}/build/app/outputs/flutter-apk/app-release.apk
