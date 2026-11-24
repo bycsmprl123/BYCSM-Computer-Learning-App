@@ -1,5 +1,5 @@
 
-name: Build BYCSM Android APK
+name: BYCSM_Flutter_Starter_v2_1.zip
 
 on:
   workflow_dispatch:
