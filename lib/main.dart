@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 void main() {
@@ -33,9 +32,15 @@ class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
 
   final courses = [
-    'CCA', 'DCA', 'ADCA', 'Tally with GST',
-    'Python', 'Artificial Intelligence',
-    'C & C++', 'Java', 'HTML & CSS',
+    'CCA',
+    'DCA',
+    'ADCA',
+    'Tally with GST',
+    'Python',
+    'Artificial Intelligence',
+    'C & C++',
+    'Java',
+    'HTML & CSS',
     'Hardware & Networking',
   ];
 
@@ -71,10 +76,22 @@ class _HomePageState extends State<HomePage> {
           setState(() => selectedIndex = index);
         },
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.school), label: 'Courses'),
-          NavigationDestination(icon: Icon(Icons.quiz), label: 'Exam'),
-          NavigationDestination(icon: Icon(Icons.menu_book), label: 'Notes'),
+          NavigationDestination(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.school),
+            label: 'Courses',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.quiz),
+            label: 'Exam',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.menu_book),
+            label: 'Notes',
+          ),
         ],
       ),
     );
@@ -94,6 +111,21 @@ class _HomePageState extends State<HomePage> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        Center(
+          child: Image.asset(
+            'app_icon.png',
+            width: 120,
+            height: 120,
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(
+                Icons.school,
+                size: 100,
+                color: Colors.blue,
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 15),
         const Card(
           color: Colors.blue,
           child: Padding(
@@ -101,33 +133,53 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Welcome to BYCSM!',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold)),
+                Text(
+                  'Welcome to BYCSM!',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 SizedBox(height: 8),
-                Text('Learn Computer Skills for Your Future',
-                    style: TextStyle(color: Colors.white)),
+                Text(
+                  'Learn Computer Skills for Your Future',
+                  style: TextStyle(color: Colors.white),
+                ),
                 SizedBox(height: 8),
-                Text('Bharatiya Yuva Computer Saksharata Mission',
-                    style: TextStyle(color: Colors.white)),
+                Text(
+                  'Bharatiya Yuva Computer Saksharata Mission',
+                  style: TextStyle(color: Colors.white),
+                ),
               ],
             ),
           ),
         ),
         const SizedBox(height: 16),
-        const Text('Student Dashboard',
-            style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 10),
-        ...items.map((item) => Card(
-          child: ListTile(
-            leading: Icon(item[0] as IconData, color: Colors.blue),
-            title: Text(item[1] as String),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () => openPage(item[1] as String),
+        const Text(
+          'Student Dashboard',
+          style: TextStyle(
+            fontSize: 21,
+            fontWeight: FontWeight.bold,
           ),
-        )),
+        ),
+        const SizedBox(height: 10),
+        ...items.map(
+          (item) => Card(
+            child: ListTile(
+              leading: Icon(
+                item[0] as IconData,
+                color: Colors.blue,
+              ),
+              title: Text(item[1] as String),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+              ),
+              onTap: () => openPage(item[1] as String),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -136,17 +188,30 @@ class _HomePageState extends State<HomePage> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const Text('Available Courses',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 12),
-        ...courses.map((course) => Card(
-          child: ListTile(
-            leading: const Icon(Icons.computer, color: Colors.blue),
-            title: Text(course),
-            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-            onTap: () => openPage(course),
+        const Text(
+          'Available Courses',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
           ),
-        )),
+        ),
+        const SizedBox(height: 12),
+        ...courses.map(
+          (course) => Card(
+            child: ListTile(
+              leading: const Icon(
+                Icons.computer,
+                color: Colors.blue,
+              ),
+              title: Text(course),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+              ),
+              onTap: () => openPage(course),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -171,12 +236,20 @@ class FeaturePage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.school, size: 65, color: Colors.blue),
+              const Icon(
+                Icons.school,
+                size: 65,
+                color: Colors.blue,
+              ),
               const SizedBox(height: 18),
-              Text(title,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontSize: 23, fontWeight: FontWeight.bold)),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 12),
               const Text(
                 'BYCSM Computer Learning',
