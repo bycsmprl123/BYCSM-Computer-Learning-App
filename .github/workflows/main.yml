@@ -1,3 +1,4 @@
+
 name: Build BYCSM APK
 
 on:
@@ -11,28 +12,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.24.0'
           channel: stable
+          cache: true
 
-      - name: Create Android project
-        run: |
-          if [ ! -d android ]; then
-            flutter create --platforms=android .
-          fi
+      - name: Flutter Doctor
+        run: flutter doctor
 
-      - name: Get dependencies
+      - name: Install Dependencies
         run: flutter pub get
 
-      - name: Build APK
+      - name: Generate BYCSM Launcher Icon
+        run: dart run flutter_launcher_icons
+
+      - name: Build Release APK
         run: flutter build apk --release
 
-      - name: Upload APK
+      - name: Upload BYCSM APK
         uses: actions/upload-artifact@v4
         with:
           name: BYCSM-APK
           path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 7
