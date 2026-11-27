@@ -1,46 +1,52 @@
-name: BYCSM_Flutter_Starter_v2_1.zip
+
+name: BYCSM Android APK Build
 
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
-      - '**.zip'
-      - '.github/workflows/android-apk-build.yml'
+      - 'lib/**'
+      - 'android/**'
+      - 'pubspec.yaml'
+      - 'app_icon.png'
+      - '.github/workflows/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.24.0'
           channel: stable
+          cache: true
 
-      - name: Locate Flutter project
+      - name: Check Project Files
         run: |
-          mkdir -p extracted
-          unzip -oq BYCSM_Flutter_Starter_v2_1.zip -d extracted
-          find extracted -name pubspec.yaml
+          test -f pubspec.yaml
+          test -f lib/main.dart
+          test -f app_icon.png
 
-      - name: Find project folder
-        run: |
-          PROJECT=$(find extracted -name pubspec.yaml -print -quit)
-          echo "PROJECT_DIR=$(dirname "$PROJECT")" >> $GITHUB_ENV
-
-      - name: Get dependencies
+      - name: Install Dependencies
         run: flutter pub get
-        working-directory: ${{ env.PROJECT_DIR }}
 
-      - name: Build APK
+      - name: Generate BYCSM Launcher Icon
+        run: dart run flutter_launcher_icons
+
+      - name: Build Release APK
         run: flutter build apk --release
-        working-directory: ${{ env.PROJECT_DIR }}
 
-      - name: Upload APK
+      - name: Upload BYCSM APK
         uses: actions/upload-artifact@v4
         with:
           name: BYCSM-APK
-          path: ${{ env.PROJECT_DIR }}/build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 7
